@@ -73,7 +73,7 @@ class CurrencyService {
       logger.info('Exchange rates refreshed');
       return rates;
     } catch (err) {
-      logger.warn({ err }, 'Failed to fetch exchange rates — using fallback');
+      logger.warn('Failed to fetch exchange rates — using fallback', { err });
       return FALLBACK_RATES;
     }
   }

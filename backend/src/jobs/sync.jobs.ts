@@ -40,7 +40,7 @@ function createJob(name: string, fn: () => Promise<void>) {
       await fn();
       logger.info(`[${name}] Completed in ${Date.now() - start}ms`);
     } catch (err) {
-      logger.error({ err }, `[${name}] Failed after ${Date.now() - start}ms`);
+      logger.error(`[${name}] Failed after ${Date.now() - start}ms`, { err });
     } finally {
       running = false;
     }
@@ -103,7 +103,7 @@ const refreshCardMeta = createJob('RefreshCardMeta', async () => {
     const sets = await pokemonTCGService.getSets();
     logger.info(`RefreshCardMeta: pre-warmed ${sets.length} sets from pokemontcg.io`);
   } catch (err) {
-    logger.warn({ err }, 'RefreshCardMeta: set pre-warm failed');
+    logger.warn('RefreshCardMeta: set pre-warm failed', { err });
   }
 });
 

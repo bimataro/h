@@ -127,7 +127,7 @@ class CardmarketCSVService {
       logger.info(`Cardmarket CSV: indexed ${indexed} entries`);
       return { indexed };
     } catch (err) {
-      logger.error({ err }, 'Cardmarket CSV: download failed');
+      logger.error('Cardmarket CSV: download failed', { err });
       throw err;
     }
   }

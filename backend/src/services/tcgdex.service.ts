@@ -147,7 +147,7 @@ class TCGdexService {
       const set = this.mapSet(data);
       return (data.cards ?? []).map((c) => this.mapCardBrief(c, set, language, data.id));
     } catch (err) {
-      logger.warn({ err, setId, language }, 'TCGdex: set fetch failed');
+      logger.warn('TCGdex: set fetch failed', { err, setId, language });
       return [];
     }
   }
@@ -207,7 +207,7 @@ class TCGdexService {
       const cardId = `${setId}/${localId}:${language}`;
       return await this.mapPrices(cardId, language, priceData);
     } catch (err) {
-      logger.warn({ err, setId, localId, language }, 'TCGdex: price fetch failed');
+      logger.warn('TCGdex: price fetch failed', { err, setId, localId, language });
       return null;
     }
   }

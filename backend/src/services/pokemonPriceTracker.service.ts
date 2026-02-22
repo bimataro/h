@@ -85,7 +85,7 @@ class PokemonPriceTrackerService {
       if (!data.psaData?.grades?.length) return null;
       return await this.mapGradedPrices(cardId, language, data);
     } catch (err) {
-      logger.warn({ err, cardId, language }, 'PokemonPriceTracker: PSA price fetch failed');
+      logger.warn('PokemonPriceTracker: PSA price fetch failed', { err, cardId, language });
       return null;
     }
   }
@@ -112,7 +112,7 @@ class PokemonPriceTrackerService {
             .filter((h) => h.grade === grade)
             .map((h) => ({ date: h.date, price: h.price }));
         } catch (err) {
-          logger.warn({ err, cardId, grade }, 'PokemonPriceTracker: price history fetch failed');
+          logger.warn('PokemonPriceTracker: price history fetch failed', { err, cardId, grade });
           return [];
         }
       },

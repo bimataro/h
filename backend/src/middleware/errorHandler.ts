@@ -22,7 +22,7 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     return;
   }
 
-  logger.error({ err }, 'Unhandled error');
+  logger.error('Unhandled error', { err });
   const body: ApiError = { code: 'INTERNAL_ERROR', message: 'Internal server error' };
   res.status(500).json({ error: body });
 }

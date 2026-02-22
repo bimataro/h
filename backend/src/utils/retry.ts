@@ -25,7 +25,7 @@ export async function withRetry<T>(
       if (attempt === maxAttempts) break;
       const delay = baseDelayMs * 2 ** (attempt - 1);
       onRetry?.(attempt, err);
-      logger.warn({ err, attempt, delay }, `Retrying after ${delay}ms (attempt ${attempt}/${maxAttempts})`);
+      logger.warn(`Retrying after ${delay}ms (attempt ${attempt}/${maxAttempts})`, { err, attempt, delay });
       await sleep(delay);
     }
   }

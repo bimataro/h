@@ -172,7 +172,7 @@ async function computeArbitrageOpportunities(params: {
         const result = calculateEV(input);
         opportunities.push(buildOpportunity(input, result));
       } catch (err) {
-        logger.warn({ err, cardId: card.id }, 'Arbitrage: skipping card due to error');
+        logger.warn('Arbitrage: skipping card due to error', { err, cardId: card.id });
       }
     }),
   );

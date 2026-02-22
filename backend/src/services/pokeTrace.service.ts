@@ -117,7 +117,7 @@ class PokeTraceService {
       if (!data.rawPrices?.length) return null;
       return await this.mapRawPrices(cardId, language, data.rawPrices);
     } catch (err) {
-      logger.warn({ err, cardId, language }, 'PokeTrace: raw price fetch failed');
+      logger.warn('PokeTrace: raw price fetch failed', { err, cardId, language });
       return null;
     }
   }
@@ -145,7 +145,7 @@ class PokeTraceService {
       if (!data.gradedPrices?.length) return null;
       return await this.mapGradedPrices(cardId, language, data.gradedPrices);
     } catch (err) {
-      logger.warn({ err, cardId, language }, 'PokeTrace: graded price fetch failed');
+      logger.warn('PokeTrace: graded price fetch failed', { err, cardId, language });
       return null;
     }
   }
@@ -177,7 +177,7 @@ class PokeTraceService {
           ]);
           return { raw, graded };
         } catch (err) {
-          logger.warn({ err, cardId, language }, 'PokeTrace: all prices fetch failed');
+          logger.warn('PokeTrace: all prices fetch failed', { err, cardId, language });
           return { raw: null, graded: null };
         }
       },
