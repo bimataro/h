@@ -1,5 +1,46 @@
 {
-  "holdings": [],
-  "watchlist": [],
-  "updatedAt": 0
+  "holdings": [
+    {
+      "ticker": "NVDA",
+      "companyName": "NVDA",
+      "shares": 10,
+      "avgCostBasis": 875,
+      "targetWeightPct": 30,
+      "currency": "USD",
+      "addedAt": 1778401670687,
+      "notes": "IA / data centers",
+      "updatedAt": 1778401670688
+    },
+    {
+      "ticker": "MSFT",
+      "companyName": "MSFT",
+      "shares": 5,
+      "avgCostBasis": 420,
+      "targetWeightPct": 25,
+      "currency": "USD",
+      "addedAt": 1778401672223,
+      "notes": "Azure + Copilot",
+      "updatedAt": 1778401672223
+    },
+    {
+      "ticker": "ASML",
+      "companyName": "ASML",
+      "shares": 2,
+      "avgCostBasis": 780,
+      "targetWeightPct": 20,
+      "currency": "USD",
+      "addedAt": 1778401673759,
+      "notes": "Monopole EUV",
+      "updatedAt": 1778401673759
+    }
+  ],
+  "watchlist": [
+    {
+      "ticker": "TSM",
+      "companyName": "TSMC",
+      "interest": "Seul fondeur capable de 2nm, pricing power intact",
+      "addedAt": 1778401678288
+    }
+  ],
+  "updatedAt": 1778401678288
 }
