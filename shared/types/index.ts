@@ -185,3 +185,159 @@ export interface ExchangeRates {
   rates: Record<Currency, number>;
   fetchedAt: number;
 }
+
+// ---------------------------------------------------------------------------
+// Portfolio — Stock / Equity
+// ---------------------------------------------------------------------------
+
+export interface StockPriceSnapshot {
+  ticker: string;
+  price: number;
+  open: number;
+  high: number;
+  low: number;
+  volume: number;
+  marketCap?: number;
+  /** Unix timestamp */
+  fetchedAt: number;
+}
+
+export interface StockPricePoint {
+  date: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface IncomeStatement {
+  period: string;
+  revenue: number;
+  grossProfit: number;
+  operatingIncome: number;
+  netIncome: number;
+  eps?: number;
+  ebitda?: number;
+}
+
+export interface BalanceSheet {
+  period: string;
+  totalAssets: number;
+  totalLiabilities: number;
+  totalEquity: number;
+  cash: number;
+  debt: number;
+}
+
+export interface CashFlowStatement {
+  period: string;
+  operatingCashFlow: number;
+  capitalExpenditures: number;
+  freeCashFlow: number;
+}
+
+export interface CompanyFacts {
+  ticker: string;
+  name: string;
+  description?: string;
+  sector?: string;
+  industry?: string;
+  employees?: number;
+  website?: string;
+  ceo?: string;
+  country?: string;
+}
+
+export interface FinancialSummary {
+  ticker: string;
+  incomeStatements: IncomeStatement[];
+  balanceSheets: BalanceSheet[];
+  cashFlows: CashFlowStatement[];
+  fetchedAt: number;
+}
+
+export interface PriceScenario {
+  label: 'bear' | 'base' | 'bull';
+  price: number;
+  /** Probability 0–1 */
+  probability: number;
+  rationale: string;
+}
+
+export interface PriceTargets {
+  '1M': number;
+  '3M': number;
+  '6M': number;
+  '12M': number;
+}
+
+export interface ResearchContext {
+  ticker: string;
+  companyName: string;
+  thesis: string;
+  /** Bull / base / bear scenarios */
+  scenarios: PriceScenario[];
+  priceTargets: PriceTargets;
+  /** Conditions that would invalidate the thesis and trigger a sell */
+  killConditions: string[];
+  /** Key catalysts to monitor */
+  catalysts: string[];
+  /** Latest news / events summary */
+  newsSummary: string;
+  /** Overall conviction score 1-10 */
+  conviction: number;
+  /** buy / hold / reduce / sell */
+  signal: 'buy' | 'hold' | 'reduce' | 'sell';
+  computedAt: number;
+}
+
+export interface BuySellSignal {
+  ticker: string;
+  action: 'buy' | 'add' | 'hold' | 'reduce' | 'sell' | 'watch';
+  urgency: 'high' | 'medium' | 'low';
+  rationale: string;
+  suggestedSizeChangePct?: number;
+  computedAt: number;
+}
+
+export interface PortfolioHolding {
+  ticker: string;
+  companyName: string;
+  shares: number;
+  avgCostBasis: number;
+  /** Target allocation as % of total portfolio (0-100) */
+  targetWeightPct: number;
+  /** Current allocation as % of total portfolio (0-100) */
+  currentWeightPct?: number;
+  currency: 'USD';
+  addedAt: number;
+  updatedAt: number;
+  notes?: string;
+  /** Tags: e.g. "AI", "energy", "speculative" */
+  tags?: string[];
+}
+
+export interface WatchlistEntry {
+  ticker: string;
+  companyName: string;
+  interest: string;
+  addedAt: number;
+}
+
+export interface Portfolio {
+  holdings: PortfolioHolding[];
+  watchlist: WatchlistEntry[];
+  updatedAt: number;
+}
+
+export interface ScanResult {
+  /** Date of the scan (YYYY-MM-DD) */
+  date: string;
+  /** Summary for public consumption */
+  summary: string;
+  signals: BuySellSignal[];
+  topConvictions: string[];
+  riskFlags: string[];
+  computedAt: number;
+}

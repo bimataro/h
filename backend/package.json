@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.1",
     "axios": "^1.7.2",
     "axios-retry": "^4.4.0",
     "compression": "^1.7.4",
