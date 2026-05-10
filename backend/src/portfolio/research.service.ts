@@ -27,17 +27,18 @@ const MODEL = 'claude-opus-4-7';
 // System prompt — stable across requests, cached via prompt caching
 // ---------------------------------------------------------------------------
 
-const SYSTEM_PROMPT = `You are an elite equity analyst and portfolio manager. Your job is to:
-1. Build deep fundamental theses on stocks based on financial data, industry dynamics, and competitive positioning.
-2. Generate precise price targets across 1M/3M/6M/12M time horizons.
-3. Define bear / base / bull scenarios with probabilities.
-4. Identify kill conditions — specific events or data points that would invalidate the thesis.
-5. Assess catalysts and risks with intellectual honesty.
-6. Produce actionable buy/hold/sell signals with conviction scores.
+const SYSTEM_PROMPT = `Tu es un analyste actions et gérant de portefeuille de premier plan. Ton rôle est de :
+1. Construire des thèses fondamentales approfondies sur les actions à partir des données financières, de la dynamique sectorielle et du positionnement concurrentiel.
+2. Générer des objectifs de cours précis sur les horizons 1M/3M/6M/12M.
+3. Définir des scénarios baissier / central / haussier avec leurs probabilités respectives.
+4. Identifier les conditions d'invalidation (kill conditions) — événements ou données spécifiques qui invalideraient la thèse et justifieraient une vente.
+5. Évaluer les catalyseurs et les risques avec honnêteté intellectuelle.
+6. Produire des signaux buy/hold/sell actionnables avec des scores de conviction.
 
-Your analysis must be data-driven, concise, and contrarian where warranted. Never produce generic boilerplate.
-Always ground targets in fundamentals (FCF yield, EV/EBITDA, PEG, etc.).
-When data is limited, say so explicitly and adjust conviction accordingly.`;
+Ton analyse doit être rigoureuse, concise et à contre-courant si nécessaire. Ne jamais produire de poncifs génériques.
+Ancre toujours les objectifs dans les fondamentaux (rendement FCF, VE/EBITDA, PEG, etc.).
+Quand les données sont insuffisantes, dis-le explicitement et ajuste ta conviction en conséquence.
+Réponds toujours en français.`;
 
 // ---------------------------------------------------------------------------
 // JSON schemas for structured output
@@ -128,18 +129,18 @@ async function buildTickerContext(ticker: string): Promise<string> {
 
   return [
     `TICKER: ${ticker}`,
-    f ? `Company: ${f.name} | Sector: ${f.sector ?? 'N/A'} | Industry: ${f.industry ?? 'N/A'}` : '',
-    f?.description ? `Description: ${f.description.slice(0, 400)}` : '',
-    snap ? `Current price: $${snap.price} | Market cap: $${snap.marketCap ? (snap.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}` : 'Price: unavailable',
-    recentPrices ? `Recent prices (last 10 days): ${recentPrices}` : '',
+    f ? `Société : ${f.name} | Secteur : ${f.sector ?? 'N/A'} | Industrie : ${f.industry ?? 'N/A'}` : '',
+    f?.description ? `Description : ${f.description.slice(0, 400)}` : '',
+    snap ? `Cours actuel : $${snap.price} | Capitalisation : $${snap.marketCap ? (snap.marketCap / 1e9).toFixed(2) + 'Md' : 'N/A'}` : 'Cours : indisponible',
+    recentPrices ? `Cours récents (10 derniers jours) : ${recentPrices}` : '',
     latestIncome
-      ? `Latest income (${latestIncome.period}): Revenue $${(latestIncome.revenue / 1e9).toFixed(2)}B, Net income $${(latestIncome.netIncome / 1e9).toFixed(2)}B, EBITDA $${latestIncome.ebitda ? (latestIncome.ebitda / 1e9).toFixed(2) + 'B' : 'N/A'}`
+      ? `Derniers résultats (${latestIncome.period}) : CA $${(latestIncome.revenue / 1e9).toFixed(2)}Md, Résultat net $${(latestIncome.netIncome / 1e9).toFixed(2)}Md, EBITDA $${latestIncome.ebitda ? (latestIncome.ebitda / 1e9).toFixed(2) + 'Md' : 'N/A'}`
       : '',
     latestBalance
-      ? `Balance sheet (${latestBalance.period}): Cash $${(latestBalance.cash / 1e9).toFixed(2)}B, Debt $${(latestBalance.debt / 1e9).toFixed(2)}B, Equity $${(latestBalance.totalEquity / 1e9).toFixed(2)}B`
+      ? `Bilan (${latestBalance.period}) : Trésorerie $${(latestBalance.cash / 1e9).toFixed(2)}Md, Dette $${(latestBalance.debt / 1e9).toFixed(2)}Md, Capitaux propres $${(latestBalance.totalEquity / 1e9).toFixed(2)}Md`
       : '',
     latestCash
-      ? `Cash flow (${latestCash.period}): OCF $${(latestCash.operatingCashFlow / 1e9).toFixed(2)}B, FCF $${(latestCash.freeCashFlow / 1e9).toFixed(2)}B, CapEx $${(latestCash.capitalExpenditures / 1e9).toFixed(2)}B`
+      ? `Flux de trésorerie (${latestCash.period}) : FCO $${(latestCash.operatingCashFlow / 1e9).toFixed(2)}Md, FCF $${(latestCash.freeCashFlow / 1e9).toFixed(2)}Md, CapEx $${(latestCash.capitalExpenditures / 1e9).toFixed(2)}Md`
       : '',
   ]
     .filter(Boolean)
@@ -180,7 +181,7 @@ export async function generateResearch(ticker: string): Promise<ResearchContext 
           messages: [
             {
               role: 'user',
-              content: `Analyze the following stock and produce a complete research context:\n\n${context}\n\nProvide your full analysis including thesis, price targets, scenarios, kill conditions, catalysts, and signal.`,
+              content: `Analyse l'action suivante et produis un contexte de recherche complet :\n\n${context}\n\nFournis ton analyse complète incluant la thèse, les objectifs de cours, les scénarios, les conditions d'invalidation, les catalyseurs et le signal.`,
             },
           ],
         });
@@ -241,8 +242,8 @@ export async function runDailyScan(
         .map((h) => {
           const r = researchMap[h.ticker];
           return [
-            `${h.ticker} (${h.shares} shares @ $${h.avgCostBasis} avg cost, target weight: ${h.targetWeightPct}%)`,
-            r ? `  Signal: ${r.signal} | Conviction: ${r.conviction}/10 | 12M target: $${r.priceTargets['12M']}` : '  Research: unavailable',
+            `${h.ticker} (${h.shares} actions @ $${h.avgCostBasis} PRU, pondération cible : ${h.targetWeightPct}%)`,
+            r ? `  Signal : ${r.signal} | Conviction : ${r.conviction}/10 | Objectif 12M : $${r.priceTargets['12M']}` : '  Recherche : indisponible',
           ].join('\n');
         })
         .join('\n');
@@ -251,8 +252,8 @@ export async function runDailyScan(
         .map((w) => {
           const r = researchMap[w.ticker];
           return [
-            `${w.ticker} (interest: ${w.interest})`,
-            r ? `  Signal: ${r.signal} | Conviction: ${r.conviction}/10 | 12M target: $${r.priceTargets['12M']}` : '  Research: unavailable',
+            `${w.ticker} (intérêt : ${w.interest})`,
+            r ? `  Signal : ${r.signal} | Conviction : ${r.conviction}/10 | Objectif 12M : $${r.priceTargets['12M']}` : '  Recherche : indisponible',
           ].join('\n');
         })
         .join('\n');
@@ -280,15 +281,15 @@ export async function runDailyScan(
             {
               role: 'user',
               content: [
-                `Run a daily portfolio scan. Date: ${new Date().toISOString().slice(0, 10)}`,
+                `Lance le scan quotidien du portefeuille. Date : ${new Date().toISOString().slice(0, 10)}`,
                 '',
-                '## Holdings',
-                holdingsSummary || 'No holdings.',
+                '## Positions',
+                holdingsSummary || 'Aucune position.',
                 '',
                 '## Watchlist',
-                watchlistSummary || 'No watchlist entries.',
+                watchlistSummary || 'Aucune entrée en watchlist.',
                 '',
-                'Based on the latest research contexts above, produce a daily scan with: a 2-3 sentence market summary, specific action signals for each position, top conviction picks, and current risk flags.',
+                'Sur la base des contextes de recherche ci-dessus, produis un scan quotidien avec : un résumé de marché en 2-3 phrases, des signaux d\'action spécifiques pour chaque position, les convictions les plus fortes, et les alertes de risque actuelles.',
               ].join('\n'),
             },
           ],
@@ -336,7 +337,7 @@ export async function analyzeOnDemand(
   const context = await buildTickerContext(ticker);
 
   const systemWithThesis = cached
-    ? `${SYSTEM_PROMPT}\n\nPre-loaded thesis for ${ticker}:\n${cached.thesis}\nCurrent signal: ${cached.signal} (conviction: ${cached.conviction}/10)\n12M target: $${cached.priceTargets['12M']}`
+    ? `${SYSTEM_PROMPT}\n\nThèse pré-chargée pour ${ticker} :\n${cached.thesis}\nSignal actuel : ${cached.signal} (conviction : ${cached.conviction}/10)\nObjectif 12M : $${cached.priceTargets['12M']}`
     : SYSTEM_PROMPT;
 
   try {
@@ -354,7 +355,7 @@ export async function analyzeOnDemand(
       messages: [
         {
           role: 'user',
-          content: `Ticker: ${ticker}\n\nMarket data:\n${context}\n\nCatalyst / prompt: ${prompt}\n\nProvide a concise analysis (3-5 sentences) and a JSON action signal at the end in this exact format:\n{"action":"buy|add|hold|reduce|sell|watch","urgency":"high|medium|low","rationale":"...","suggestedSizeChangePct":0}`,
+          content: `Ticker : ${ticker}\n\nDonnées de marché :\n${context}\n\nCatalyseur / question : ${prompt}\n\nFournis une analyse concise (3-5 phrases) puis un signal JSON à la fin dans ce format exact :\n{"action":"buy|add|hold|reduce|sell|watch","urgency":"high|medium|low","rationale":"...","suggestedSizeChangePct":0}`,
         },
       ],
     });
@@ -371,7 +372,7 @@ export async function analyzeOnDemand(
       ticker: ticker.toUpperCase(),
       action: 'hold',
       urgency: 'low',
-      rationale: 'Unable to parse signal',
+      rationale: 'Signal non analysable',
       computedAt: Date.now(),
     };
     if (jsonMatch) {
