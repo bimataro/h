@@ -17,6 +17,14 @@ export const TTL = {
   EXCHANGE_RATES: 4 * 60 * 60 * 1_000,
   /** Arbitrage computations — refreshed every 30 min */
   ARBITRAGE: 30 * 60 * 1_000,
+  /** Stock price snapshots — refresh hourly */
+  STOCK_PRICES: 60 * 60 * 1_000,
+  /** Financial statements — refresh daily */
+  FINANCIALS: 24 * 60 * 60 * 1_000,
+  /** AI research context per ticker — refresh every 6 hours */
+  RESEARCH: 6 * 60 * 60 * 1_000,
+  /** Daily portfolio scan results — refresh every 30 min */
+  PORTFOLIO_SCAN: 30 * 60 * 1_000,
 } as const;
 
 interface CacheEntry<T> {

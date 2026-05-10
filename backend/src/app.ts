@@ -11,6 +11,8 @@ import { cardsRouter } from './routes/cards.routes';
 import { setsRouter } from './routes/sets.routes';
 import { arbitrageRouter } from './routes/arbitrage.routes';
 import { startSyncJobs } from './jobs/sync.jobs';
+import { startPortfolioJobs } from './jobs/portfolio.jobs';
+import { portfolioRouter } from './routes/portfolio.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +47,7 @@ app.get('/health', (_req, res) => {
 app.use('/cards', cardsRouter);
 app.use('/sets', setsRouter);
 app.use('/arbitrage-opportunities', arbitrageRouter);
+app.use('/portfolio', portfolioRouter);
 
 // ---------------------------------------------------------------------------
 // Error handler (must be last)
@@ -58,6 +61,7 @@ app.listen(PORT, () => {
   logger.info(`Server listening on port ${PORT}`);
   if (process.env.DISABLE_CRON !== 'true') {
     startSyncJobs();
+    startPortfolioJobs();
   }
 });
 
